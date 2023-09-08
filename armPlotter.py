@@ -1,11 +1,11 @@
 import matplotlib.pyplot as plt
 from matplotlib import animation
 
-from fileParser import parseArmCoors, parseWristAngles, parseClawState
+from fileParser import parseArmCoors
 
-armCoors = parseArmCoors("/home/ibrahim/simAll.txt")
-wristCoors = parseWristAngles("/home/ibrahim/simAll.txt")
-clawStateArr = parseClawState("/home/ibrahim/simAll.txt")
+armCoors = parseArmCoors("C:/Users/pierr/Downloads/testData.csv", ["A", "B"])
+wristCoors = parseArmCoors("C:/Users/pierr/Downloads/testData.csv", ["C"])
+clawStateArr = parseArmCoors("C:/Users/pierr/Downloads/testData.csv", ["D"])
 fig = plt.figure(figsize=(15, 12))
 ax = fig.add_subplot(autoscale_on=False, xlim=(-4., 4.), ylim=(-2., 2.))
 clawState = ax.text(0.02, 0.95, '', transform=ax.transAxes)
@@ -15,9 +15,9 @@ line, = ax.plot([], [], 'o-', lw=2)
 chamberLine, = ax.plot([], [], 'o-', lw=2)
 wristState = ax.text(0.02, 0.90, '', transform=ax.transAxes)
 
-
 totalFrames = len(armCoors)
 
+print(armCoors)
 
 # poses
 # pivot: (0,0)
@@ -34,13 +34,14 @@ def update(frame):
     chamberFar = [-1, -1]
     line.set_data(p1, p2)
     chamberLine.set_data(chamberClose, chamberFar)
-    clawState.set_text("Claw State: " +clawStateArr[frame])
-    wristState.set_text("Wrist Angle: " + str(wristCoors[frame]/3.14*180))
+    clawState.set_text("Claw State: " +str(clawStateArr[frame]))
+    wristState.set_text("Wrist Angle: " + str(wristCoors[frame][0]/3.14*180))
     return line, chamberLine, wristState, clawState
 
     # def plotArm():
 
-
 ani = animation.FuncAnimation(fig, update, totalFrames, interval=.02 * 1000, blit=True)
-ani.save('arm.mp4')
-plt.show()
+
+# writervideo = animation.FFMpegWriter(fps=60)
+k = ani.save('C:/Users/pierr/Downloads/arm.gif')
+#plt.show()
